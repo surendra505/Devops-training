@@ -1,0 +1,41 @@
+---
+- hosts: myapp
+
+  tasks:
+    - name: Installing Apache Packages
+      command: yum install httpd -y
+    - name: Copying confuration files.
+      command: cp /root/httpd-vhosts.conf /etc/httpd/conf/httpd-vhosts.conf
+    - name: Start the Apache service at boot
+      command: service httpd start
+    - command: chkconfig httpd on
+
+---
+<!-------------------------------------------------------------------------->
+
+---
+- hosts: db
+  sudo: yes
+
+  tasks:
+    - name: Installing Apache packages
+      yum: name={{ item }} state=present
+      with_items:
+        - httpd
+    - name: Copying configuration files.
+      copy:
+        src: "{{ item.src }}"
+        dest: "{{ item.dest }}"
+        owner: root
+        group: root
+        mode: 0755
+      with_items:
+        - {
+          src: "/root/httpd-vhosts.conf",
+          dest: "/etc/httpd/conf/httpd-vhosts.conf"
+        }
+    - name: Start the Apache service and run at boot
+      service: name=httpd state=started enabled=yes
+
+      
+        
