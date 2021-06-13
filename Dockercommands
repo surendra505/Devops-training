@@ -6,4 +6,5 @@ Docker images
 
 docker ps
 
+docker exec
 
