@@ -1,0 +1,9 @@
+dockercommpose up
+
+dockercompose down
+
+Docker images
+
+docker ps
+
+
